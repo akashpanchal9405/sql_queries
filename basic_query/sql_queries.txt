@@ -1,0 +1,101 @@
+## to check database
+show databases;
+## to create database
+create database database_name;
+##to use database
+use database_name;
+--------------------------
+##create table command 
+create table person(
+id int unique not null,
+name varchar(50) not null,
+birth_date date not null,
+phone varchar(13) unique not null,
+gender varchar(1) not null
+);
+
+-------------------
+##Insert single record 
+insert into person(id,name,birth_date,phone,gender)
+values(1,"Ram Kumar","1998-09-18","9933445533","M");
+
+##Insert multiple record
+insert into person(id,name,birth_date,phone,gender)
+values
+(3,"Anil Kapoor","1991-12-23","99538753523","M"),
+(4,"Salman Khan","1980-08-25","98992853523","M"),
+(5,"Jhanvi Kapoor","1996-02-28","9953873343","F"),
+(6,"Vivek Oberoi","1980-11-05","99838753523","M"),
+(7,"Sharukh Khan","1989-12-23","9443753523","M");
+
+-------------------------------------------
+##create personal table
+create table personal(id int not null unique,
+name varchar(50) not null,
+gender varchar(1) not null,
+age int not null check(age>=18),
+phone varchar(13) not null unique,
+city varchar(20) not null default 'AGRA'
+);
+
+--------------------------
+##insert multiple record
+insert into personal(id,name,gender,age,phone,city)
+values
+(1,"Ramesh Kumar","M",19,"8899345654","Delhi"),
+(2,"Pawan sharma","M",21,"8823435654","Mumbai"),
+(3,"Rakesh verma","M",28,"8892342324","Noida"),
+(4,"Nitesh choudhary","M",29,"8323344324","Shimla"),
+(5,"Sunil Kumar","M",27,"8133445234","Luckhnou");
+
+-------------------------------------
+##fetch record from table
+select * from personal;
+select * from personal where id = 1;
+select * from personal where age >= 21;
+select * from personal where city != "Noida"; || select * from personal where city <> "Noida";
+
+##And operator
+select * from personal where age > 21 and age<30;
+
+##Or operator
+select * from personal where age = 22 or age = 19;
+
+##IN Operator
+select * from personal where city in("Delhi","Shimla","Mumbai");
+select * from personal where city  not in("Delhi","Shimla","Mumbai");
+
+##Between operator
+select * from personal where age between 22 and 29;
+select * from personal where age not  between 21 and 29;
+
+##Like operator with wild card
+select * from personal where name like "a%"; //name starts with a 
+select * from personal where name like "%a"; //name ends with a 
+select * from personal where name like "%am%"; //have 'am' in any position
+select * from personal where name like "m%a"; //starts with m and ends with a
+select * from personal where name like "_a%"; //a in the second position
+select * from personal where name like "__a%"; //a in the third position
+select * from personal where name like "_oy%"; //0 in the second position and y in the third position
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
