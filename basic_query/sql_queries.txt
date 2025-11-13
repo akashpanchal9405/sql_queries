@@ -137,6 +137,16 @@ city varchar(40) not null,
 primary key(id)
 );
 
+update employee set salary = 78923 where id = 5;
+
+insert into employee(id,name,salary,age,email,phone,city)
+values
+(1,"sudhir",47392,33,"sudhir@gmail.com","8894333432","Agra"),
+(2,"aman",43783,33,"aman@gmail.com","9994333432","Delhi"),
+(3,"chirag",43892,33,"chirag@gmail.com","7894333432","Agra"),
+(4,"nayan",88743,33,"nayan@gmail.com","8694333432","MUnnar"),
+(5,"palak",89245,33,"palak@gmail.com","9894334432","Agra");
+
 ## how to add primary key on existing table
 alter table employee add primary key(id);
 
@@ -264,13 +274,86 @@ select s.id,s.name,s.age, c.city_name,cr.course_name
 from student s join city c 
 on s.city_id = c.city_id join courses cr 
 on s.course_id = cr.course_id;
+-----------------------------------
+## GROUP BY AND HAVING CLAUSE -> group based on any column like department,city having apply condition on grouped records.
+								any we can use aggregate functions with group by and having like count,avg,max,min,sum
 
+select city,count(city) from employee
+group by city ;
 
+select city,age,count(city) from employee
+where age >25
+group by city ;
 
+select city,age,count(city) from employee
+where age >25
+group by city
+order by count(city) ;
 
+select city,age,count(city) from employee
+where age >25
+group by city
+having count(city) > 2
+order by count(city) ;
 
+----------------------------
+##subquery if child query return atleast 1 record then only parent query give results
 
+select id,name,age
+from student 
+where course_id = (select course_id from courses where course_name ="BCA");
 
+select id,name,age
+from student 
+where course_id in(select course_id from courses where course_name in("BCA","BTECH"));
+--------------------------
+##EXIST AND NOT EXIST
+
+select id,name,age
+from student 
+where  exists (select course_id from courses where course_name ="BCA");
+
+select id,name,age
+from student 
+where  not exist(select course_id from courses where course_name in("BCA","BTECH"));
+
+-------------------------
+##UNION AND UNION ALL 
+1. EACH TABLE WILL HAVE SAME NUMBER OF COLUMN WITH SAME NAME
+2. THE COLUMN MUST HAVE SIMILAR DATA TYPE
+3. THE COLUMN IN EACH SELECT STATEMENT WILL BE IN SAME ORDER
+
+create table lecturer(id int,
+name varchar(50) not null,
+age int not null,
+city_id int not null,
+course_id int not null,
+primary key(id)
+);
+
+insert into lecturer(id,name,age,city_id,course_id)
+values
+(1,"Ram kumar",45,2,5),
+(2,"Vishal sharma",40,1,4),
+(3,"Naveen Reddy",38,2,1),
+(4,"anil Verma",25,4,3),
+(5,"Nitin Sharma",34,2,2);
+
+select * from student
+union
+select * from lecturer; 
+
+select name from student
+union 
+select name from lecturer; 
+
+select name,age from student
+union
+select name,age from lecturer; 
+
+select name,age from student
+union all
+select name,age from lecturer; 
 
 
 
