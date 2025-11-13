@@ -78,13 +78,192 @@ select * from personal where name like "_a%"; //a in the second position
 select * from personal where name like "__a%"; //a in the third position
 select * from personal where name like "_oy%"; //0 in the second position and y in the third position
 
+------------------------
+##Order by & distinct
+select * from personal order by name;
+select * from personal where city = "Delhi" order by name;
+select * from personal  order by age;
+select * from personal  order by name,city;
+
+select distinct city from personal order by city;
+----------------------
+##IS NULL , IS NOT NULL
+
+SELECT * FROM PERSONAL WHERE NAME IS NULL;
+SELECT * FROM PERSONAL WHERE NAME IS NOT NULL;
+
+-------------
+##LIMIT CLAUSE
+SELECT * FROM PERSONAL LIMIT 2;
+SELECT * FROM PERSONAL WHERE AGE > 21 LIMIT 2;
+
+## OFFSET CLAUSE
+SELECT * FROM PERSONAL  LIMIT 1,2; // HERE after LIMIT 1 MEANS skip 1 record after that limit 2
+SELECT * FROM PERSONAL  LIMIT 2,2; // HERE after LIMIT 1 MEANS skip 2 record after that limit 2
+-----------------------
+## AGGREGATE FUNCTIONS count(column),max(column),min(column),sum(column),avg(column)
+
+select count(*) as count from personal;
+select count(distinct city) as count from personal;
+select max(age) as max_age from personal;
+select min(age) as min_age from personal;
+select sum(age) as sum_age from personal;
+select avg(age) as avg_age from personal;
+
+-------------------------------
+##update command
+update personal set city = "Delhi"
+where id = 4;
+update personal set city = "Delhi", age= "30"
+where id = 4;
+update personal set city = "Delhi", age= "30"
+where id in (1,5);
+
+## COMMIT AND ROLLBACK || note -> in mysql workbench default commit is available 
+commit;
+rollback;
+
+## DELETE COMMAND
+delete from personal where id = 5;
+-----------------------------------
+## PRIMARY KEY AND FOREIGN KEY
+create table employee(id int,
+name varchar(50) not null,
+salary int not null,
+age int not null,
+email varchar(50) not null unique,
+phone varchar(13) not null unique,
+city varchar(40) not null,
+primary key(id)
+);
+
+## how to add primary key on existing table
+alter table employee add primary key(id);
+
+## example for foreign key in student table city column is refrences to city table id column
+create table city(id int,
+name varchar(50) not null,
+primary key(id)
+);
+
+insert into city(id,name)
+values
+(1,"Agra"),
+(2,"Delhi"),
+(3,"Agra"),
+(4,"Mumbai"),
+(5,"Mohali");
 
 
+##student table 
+create table student(id int,
+name varchar(50) not null,
+age int not null,
+city int not null,
+primary key(id),
+foreign key(city) references City(id)
+);
+
+insert into student(id,name,age,city)
+values
+(1,"mayank",25,2),
+(2,"mukesh",27,4),
+(3,"manish",24,1),
+(4,"pawan",30,3),
+(5,"sunil",23,2);
+
+## join query to fetch record from student and city table, here will get only matching record from both table
+select s.id,s.name,s.age,c.name  city_name from student s join city c
+on s.city=c.id;
+
+-----------------------------
+##INNER JOIN to fetch match record from 2 tables based on some relation ie pk and fk
+
+select s.id,s.name,s.age,c.name  city_name from student s inner join city c
+on s.city=c.id;
+
+select s.id,s.name,s.age,c.name as city_name from student s inner join city c
+on s.city=c.id where c.name = "Agra" order by age desc;
+
+-------------------------
+##LEFT JOIN to fetch related common record from both table, and fetch all records from left table | table1
+select s.id,s.name,s.age,c.name  city_name from student s left join city c
+on s.city=c.id;
+
+select s.id,s.name,s.age,c.name as city_name from student s left join city c
+on s.city=c.id where c.name = "Agra" order by age desc;
+
+-------------------------------
+##RIGHT JOIN to fetch related common record from both table, and fetch all records from right table | table2
+
+select s.id,s.name,s.age,c.name  city_name from student s right join city c
+on s.city=c.id;
+
+select s.id,s.name,s.age,c.name as city_name from student s right join city c
+on s.city=c.id where c.name = "Agra" order by age desc;
+-----------------------------------
+##CROSS JOIN it will create a combination from left to right table if table1 have 4 record and table2 have 3 records,
+			so it will join 1 row of table1 to all rows of table2 and same for 4 rows of table1 will join all records
+			of table2 so in this case will have total 12 records in response.
+			
+select s.id,s.name,s.age,c.name  city_name from student s cross join city c;
+
+select s.id,s.name,s.age,c.name as city_name from student s cross join city c
+on s.city=c.id where c.name = "Agra" order by age desc;	
+
+----------------------------------------
+## MULTIPLE JOIN MEANS join 2 or more than table 
+	
+create table student(id int,
+name varchar(50) not null,
+age int not null,
+city_id int not null,
+course_id int not null,
+primary key(id),
+foreign key(city_id) references City(city_id),
+foreign key(course_id) references Courses(course_id)
+);
+
+insert into student(id,name,age,city_id,course_id)
+values
+(1,"mayank",25,2,1),
+(2,"mukesh",27,4,4),
+(3,"manish",24,1,2),
+(4,"pawan",30,3,2),
+(5,"sunil",23,2,1);
 
 
+create table city(city_id int,
+city_name varchar(50) not null,
+primary key(city_id)
+);
 
+insert into city(city_id,city_name)
+values
+(1,"Agra"),
+(2,"Delhi"),
+(3,"Agra"),
+(4,"Mumbai"),
+(5,"Mohali");
 
+create table courses(course_id int,
+course_name varchar(50) not null,
+primary key(course_id)
+);
 
+insert into courses(course_id,course_name)
+values
+(1,"Btech"),
+(2,"BCA"),
+(3,"MBA"),
+(4,"BSC"),
+(5,"BBA");
+
+## joined above 3 tables in below query
+select s.id,s.name,s.age, c.city_name,cr.course_name
+from student s join city c 
+on s.city_id = c.city_id join courses cr 
+on s.course_id = cr.course_id;
 
 
 
